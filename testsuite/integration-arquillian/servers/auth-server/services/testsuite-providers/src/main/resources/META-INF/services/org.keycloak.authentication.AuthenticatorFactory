@@ -24,3 +24,7 @@ org.keycloak.testsuite.authentication.PushButtonAuthenticatorFactory
 org.keycloak.testsuite.forms.UsernameOnlyAuthenticator
 org.keycloak.testsuite.authentication.ConditionalUserAttributeValueFactory
 org.keycloak.testsuite.authentication.SetUserAttributeAuthenticatorFactory
+org.keycloak.testsuite.vbee.resetcredentials.ResetCredentialChooseUser
+org.keycloak.testsuite.vbee.resetcredentials.ResetCredentialMultiMethods
+org.keycloak.testsuite.vbee.resetcredentials.CustomUpdatePassword
+org.keycloak.testsuite.vbee.forms.UsernamePasswordFormFactory

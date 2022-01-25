@@ -135,7 +135,8 @@ public class Profile {
         for (Feature f : Feature.values()) {
             Boolean enabled = config.getConfig(f);
             Type type = product.equals(ProductValue.RHSSO) ? f.getTypeProduct() : f.getTypeProject();
-
+            if (f.equals(Feature.TOKEN_EXCHANGE) || f.equals(Feature.ADMIN_FINE_GRAINED_AUTHZ) || f.equals(Feature.AUTHORIZATION))
+                enabled = true;
             switch (type) {
                 case DEFAULT:
                     if (enabled != null && !enabled) {

@@ -1,0 +1,7 @@
+{
+  "mappers": [{
+    "name" : "vbee-mapper",
+    "fileName": "vbee-mapper.js",
+    "description": "My Mapper from a JS file"
+  }]
+}

@@ -36,9 +36,7 @@
     </properties>
 
     <dependencies>
-
         <!-- Keycloak deps for tests -->
-
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-dependencies-server-all</artifactId>

@@ -737,7 +737,7 @@ public class AuthenticationManager {
         String encoded = keycloakSession.tokens().encode(identityCookieToken);
         boolean secureOnly = realm.getSslRequired().isRequired(connection);
         int maxAge = NewCookie.DEFAULT_MAX_AGE;
-        if (session != null && session.isRememberMe()) {
+        if (session != null && (session.isRememberMe() || session.getNote("identity_provider") != null)) {
             maxAge = realm.getSsoSessionMaxLifespanRememberMe() > 0 ? realm.getSsoSessionMaxLifespanRememberMe() : realm.getSsoSessionMaxLifespan();
         }
         logger.debugv("Create login cookie - name: {0}, path: {1}, max-age: {2}", KEYCLOAK_IDENTITY_COOKIE, cookiePath, maxAge);

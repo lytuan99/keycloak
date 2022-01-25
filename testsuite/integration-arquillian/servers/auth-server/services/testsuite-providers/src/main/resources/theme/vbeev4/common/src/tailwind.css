@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.active{
+  @apply bg-primary text-white hover:bg-red-600
+}
+
+.input-control{
+  @apply border outline-none pl-4 py-2 pr-2.5 rounded focus:border-blue-500;
+}
+
+.btn {
+  @apply rounded-5 px-5 py-2 text-center
+}
+
+@font-face {
+  font-family: "SanFranciscoDisplay";
+  font-style: normal;
+  font-weight: 900;
+  src: url(../fonts/SanFranciscoDisplay-Black.otf) format("opentype");
+}
+@font-face {
+  font-family: "SanFranciscoDisplay";
+  src: url(../fonts/SanFranciscoDisplay-Bold.otf) format("opentype");
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: "SanFranciscoDisplay";
+  src: url(../fonts/SanFranciscoDisplay-Semibold.otf) format("opentype");
+  font-style: normal;
+  font-weight: 600;
+}
+@font-face {
+  font-family: "SanFranciscoDisplay";
+  src: url(../fonts/SanFranciscoDisplay-Medium.otf) format("opentype");
+  font-style: normal;
+  font-weight: 500;
+}
+@font-face {
+  font-family: "SanFranciscoDisplay";
+  src: url(../fonts/SanFranciscoDisplay-Regular.otf) format("opentype");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "SanFranciscoDisplay";
+  src: url(../fonts/SanFranciscoDisplay-Light.otf) format("opentype");
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "SanFranciscoDisplay";
+  src: url(../fonts/SanFranciscoDisplay-Ultralight.otf) format("opentype");
+  font-weight: 200;
+}
+@font-face {
+  font-family: "SanFranciscoDisplay";
+  src: url(../fonts/SanFranciscoDisplay-Thin.otf) format("opentype");
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: "SanFranciscoDisplay-heavy";
+  src: url(../fonts/SanFranciscoDisplay-Heavy.otf) format("opentype");
+}
+
+.alert-success {
+  @apply bg-green-100 border-l-4 border-green-500 text-green-700 p-4
+}
+
+.alert-error {
+  @apply bg-red-100 border-l-4 border-red-500 text-red-700 p-4
+}
+
+.alert-warning {
+  @apply bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4
+}
+
+.alert-info {
+  @apply bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4
+}

@@ -5,9 +5,17 @@ public class UserSyncRequest {
     private String clientId;
     private String username;
     private String password;
+    private String provider;
+    private String providerUserId;
+    private String userId;
 
-    public static UserSyncRequest build() {
-        return new UserSyncRequest();
+    public UserSyncRequest(String realmId, String clientId) {
+        this.realmId = realmId;
+        this.clientId = clientId;
+    }
+
+    public static UserSyncRequest build(String realmId, String clientId) {
+        return new UserSyncRequest(realmId, clientId);
     }
 
     public String getUsername() {
@@ -44,5 +52,28 @@ public class UserSyncRequest {
     public UserSyncRequest clientId(String clientId) {
         this.clientId = clientId;
         return this;
+    }
+
+    public String getProvider() { return provider; };
+
+    public UserSyncRequest provider(String provider) {
+        this.provider = provider;
+        return this;
+    }
+
+    public String getProviderUserId() { return providerUserId; }
+
+    public UserSyncRequest providerUserId(String providerUserId) {
+        this.providerUserId = providerUserId;
+        return this;
+    }
+
+    public UserSyncRequest userId(String userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

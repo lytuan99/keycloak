@@ -8,5 +8,6 @@ public class OtpConfig {
     public static final String LENGTH = "length";
     public static final String TTL = "ttl";
     public static final String RESEND_DURATION = "resend_duration";
-    public static final String SIMULATION = "simulation";
+    public static final String URL = "url";
+    public static final String ACCESS_TOKEN = "access_token";
 }

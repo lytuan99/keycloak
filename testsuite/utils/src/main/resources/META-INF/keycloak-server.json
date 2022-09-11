@@ -134,7 +134,7 @@
 
     "connectionsJpa": {
         "default": {
-            "url": "${keycloak.connectionsJpa.url:jdbc:postgresql://192.168.2.101:5432/keycloak}",
+            "url": "${keycloak.connectionsJpa.url:jdbc:postgresql://192.168.1.116:5432/keycloak}",
             "driver": "${keycloak.connectionsJpa.driver:org.postgresql.Driver}",
             "driverDialect": "${keycloak.connectionsJpa.driverDialect:}",
             "user": "${keycloak.connectionsJpa.user:keycloak}",

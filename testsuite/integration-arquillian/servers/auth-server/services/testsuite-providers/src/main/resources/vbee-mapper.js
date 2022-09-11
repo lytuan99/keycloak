@@ -1,7 +1,8 @@
 var ipAddress = userSession.getIpAddress();
 var phoneNumber = user.getFirstAttribute('phoneNumber');
 var avatar = user.getFirstAttribute('avatar');
-var identityProvider = userSession.getNote('identity_provider');
+var identityProvider = userSession.getNote('entity_provider');
+var roleMappings = user.getRoleMappings();
 
 // map value to token claims
 token.getOtherClaims().put("ip", ipAddress);

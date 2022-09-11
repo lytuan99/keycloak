@@ -4,7 +4,7 @@
 <@layout.authLayout title=msg("register") + " | Vbee Studio">
     <div class="flex font-sfd text-dark h-screen font-regular" >
         <div class="relative hidden md:block">
-            <div class="absolute top-6 left-8">
+            <div id="logo-vbee" class="absolute top-6 left-8">
                 <img class="" src="${url.resourcesPath}/images/logo-vbee.png"/>
             </div>
             <img src="${url.resourcesPath}/images/bg-register.png" class="h-screen max-w-sm lg:max-w-lg"/>

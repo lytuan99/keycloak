@@ -22,10 +22,10 @@ import org.keycloak.events.EventListenerProvider;
 import org.keycloak.events.EventListenerTransaction;
 import org.keycloak.events.EventType;
 import org.keycloak.events.admin.AdminEvent;
+import org.keycloak.models.FederatedIdentityModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
-import org.keycloak.models.UserSessionModel;
 import org.keycloak.testsuite.vbee.models.ExtendedEvent;
 
 import java.util.concurrent.BlockingQueue;
@@ -50,11 +50,11 @@ public class EventsListenerProvider implements EventListenerProvider {
     public void onEvent(Event event) {
         System.out.println("on Event: " + event.getType());
         RealmModel realm = keycloakSession.realms().getRealm(event.getRealmId());
-        UserSessionModel userSessionModel = keycloakSession.sessions().getUserSession(realm, event.getSessionId());
-        System.out.println("Auth Method: " + userSessionModel.getAuthMethod());
-        System.out.println("Broker UserId: " + userSessionModel.getBrokerUserId());
-        System.out.println("NOTES: " + userSessionModel.getNotes().toString());
-        System.out.println("Broker sessionId: "+ userSessionModel.getBrokerSessionId());
+//        UserSessionModel userSessionModel = keycloakSession.sessions().getUserSession(realm, event.getSessionId());
+//        System.out.println("Auth Method: " + userSessionModel.getAuthMethod());
+//        System.out.println("Broker UserId: " + userSessionModel.getBrokerUserId());
+//        System.out.println("NOTES: " + userSessionModel.getNotes().toString());
+//        System.out.println("Broker sessionId: "+ userSessionModel.getBrokerSessionId());
 
         ExtendedEvent extendedEvent = new ExtendedEvent(event);
 
@@ -65,10 +65,16 @@ public class EventsListenerProvider implements EventListenerProvider {
 
         if(event.getType() == EventType.REGISTER ||
                 event.getType() == EventType.LOGIN) {
-            UserModel user = keycloakSession.users().getUserById(keycloakSession.realms().getRealm(event.getRealmId()), event.getUserId());
+            UserModel user = keycloakSession.users().getUserById(realm, event.getUserId());
             String identityProvider = event.getDetails().get("identity_provider");
-
-            extendedEvent.handleRegisterEvent(user.getAttributes(), identityProvider);
+            String providerUserId = null;
+            if (identityProvider == null)
+                identityProvider = "vbee";
+            else {
+                FederatedIdentityModel federatedIdentity = keycloakSession.users().getFederatedIdentity(realm, user, identityProvider);
+                providerUserId = federatedIdentity.getUserId();
+            }
+            extendedEvent.handleRegisterEvent(user.getAttributes(), identityProvider, providerUserId);
             extendedEvent.executeSendingWebhook();
         }
 
@@ -81,9 +87,23 @@ public class EventsListenerProvider implements EventListenerProvider {
         if (event.getType() == EventType.TOKEN_EXCHANGE) {
             UserModel userModel = keycloakSession.sessions().getUserSession(realm, event.getSessionId()).getUser();
             String identityProvider = event.getDetails().get("subject_issuer");
+            String providerUserId = null;
+            FederatedIdentityModel federatedIdentity = keycloakSession.users().getFederatedIdentity(realm, userModel, identityProvider);
+            providerUserId = federatedIdentity.getUserId();
 
-            extendedEvent.handleExchangeTokenEvent(userModel.getAttributes(), userModel.getId(), identityProvider);
+            extendedEvent.handleExchangeTokenEvent(userModel.getAttributes(), userModel.getId(), identityProvider, providerUserId);
             extendedEvent.executeSendingWebhook();
+        }
+
+        if (event.getType() == EventType.CUSTOM_REQUIRED_ACTION) {
+            String requiredAction = event.getDetails().get("custom_required_action");
+            if (requiredAction.equals("VERIFY_EMAIL")) {
+                extendedEvent.setType(EventType.REGISTER);
+                UserModel user = keycloakSession.users().getUserById(keycloakSession.realms().getRealm(event.getRealmId()), event.getUserId());
+                String identityProvider = "vbee";
+                extendedEvent.handleRegisterEvent(user.getAttributes(), identityProvider, null);
+                extendedEvent.executeSendingWebhook();
+            }
         }
     }
 

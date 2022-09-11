@@ -80,19 +80,23 @@ public class UsernamePasswordForm extends AbstractUsernameFormAuthenticator impl
                 context.failureChallenge(AuthenticationFlowError.INVALID_CREDENTIALS, challengeResponse);
                 return;
             }
-//            UserSyncRequest userSyncRequest = new UserSyncRequest(realm.getName(), clientId, username, password);
-            UserSyncRequest userSyncRequest = UserSyncRequest.build()
-                    .realmId(realm.getName())
-                    .clientId(clientId)
-                    .username(username)
-                    .password(password);
+            UserSyncRequest userSyncRequest = UserSyncRequest.build(realm.getName(), clientId).username(username).password(password);
 
-            SyncV3Service.syncUser(userSyncRequest);
+//            SyncV3Service.syncUser(userSyncRequest);
 
             UserModel user = context.getSession().users().getUserByUsername(realm, username);
 
+            if (user == null)
+                user = context.getSession().users().getUserByEmail(realm, username);
+
             // Nếu User có password thì tiếp tục thực hiện đăng nhập mà không cần check gì cả
             if (user != null && !hasUserHadPassword(context.getSession(), realm, user)) {
+                String providerName = findIdentityProviderOfUser(context.getSession(), realm, user);
+                if (providerName != null) {
+                    Response challengeResponse = challenge(context, "existingIdentityProvider" + providerName, "identityProvider");
+                    context.failureChallenge(AuthenticationFlowError.IDENTITY_PROVIDER_ERROR, challengeResponse);
+                    return;
+                }
                 // Nếu không có thì thực hiện check password Vbee V3
                 String hashedPasswordV3 = user.getFirstAttribute(SyncV3Service.HASHED_PASSWORD_V3);
                 if (hashedPasswordV3 == null) {
@@ -109,9 +113,9 @@ public class UsernamePasswordForm extends AbstractUsernameFormAuthenticator impl
                     boolean result = createNewPassword(context, realm, user, password);
                     if(!result) return;
                     user.removeAttribute(SyncV3Service.HASHED_PASSWORD_V3);
-
-                    context.success();
-                    return;
+//
+//                    context.success();
+//                    return;
                 }
             }
         }
@@ -120,6 +124,19 @@ public class UsernamePasswordForm extends AbstractUsernameFormAuthenticator impl
             return;
         }
         context.success();
+    }
+
+    private String findIdentityProviderOfUser(KeycloakSession session, RealmModel realm, UserModel user) {
+        Stream<FederatedIdentityModel> providers = session.users().getFederatedIdentitiesStream(realm, user);
+        List<FederatedIdentityModel> userList = providers.collect(Collectors.toList());
+        if (userList.size() == 0)
+            return null;
+        if (userList.size() == 1)
+            return userList.get(0).getIdentityProvider();
+
+        String provider1 = userList.get(0).getIdentityProvider();
+        String provider2 = userList.get(1).getIdentityProvider();
+        return provider1 + "-" + provider2;
     }
 
     /**

@@ -54,14 +54,13 @@ function getQuery() {
 function handleAddRedirectUrlToLogo() {
     const logoVbee = document.getElementById('logo-vbee');
     const query = getQuery();
-    if(!query || !query.client_id) return;
-    if(query.client_id === 'vbee-tts-crm') {
-        console.log('query: ', query);
-        logoVbee.classList.add("cursor-pointer");
-        logoVbee.addEventListener('click', function(e) {
-            window.location.assign('https://dev.vbee.vn');
-        });
-    }
+    console.log('query 1: ', query);
+    if(!query || !query.redirect_uri) return;
+    console.log('query 2: ', query);
+    logoVbee.classList.add("cursor-pointer");
+    logoVbee.addEventListener('click', function(e) {
+        window.location.assign(query.redirect_uri);
+    });
 }
 
  function countdownResendingOtp(resendDuration) {
@@ -82,5 +81,6 @@ function handleAddRedirectUrlToLogo() {
          }
      }, 1000);
  }
+handleAddRedirectUrlToLogo();
 
-countdownResendingOtp(future || (new Date().getTime() + 60*1000))
+countdownResendingOtp(future || (new Date().getTime() + 60*1000));

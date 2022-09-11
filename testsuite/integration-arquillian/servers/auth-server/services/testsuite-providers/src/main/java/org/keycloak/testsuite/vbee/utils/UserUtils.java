@@ -5,6 +5,7 @@ import org.keycloak.models.UserModel;
 import org.keycloak.models.UserProvider;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,6 +32,20 @@ public class UserUtils {
         Stream<UserModel> users = userProvider.searchForUserByUserAttributeStream(realm,
                 "phoneNumber", phoneNumber);
         return singleUser(users);
+    }
+
+    public static String randomVbeeEmail() {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 8;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString + "@private.vbee.vn";
     }
 
 }

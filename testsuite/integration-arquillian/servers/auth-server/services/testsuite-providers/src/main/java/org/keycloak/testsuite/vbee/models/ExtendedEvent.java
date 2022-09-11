@@ -37,6 +37,8 @@ public class ExtendedEvent {
 
     private String error;
 
+    private String providerUserId;
+
     private Map<String, String> details;
 
     public ExtendedEvent(Event event) {
@@ -52,15 +54,17 @@ public class ExtendedEvent {
         this.details = new HashMap<String, String>();
     }
 
-    public void mapValuesToDetails(Map<String, List<String>> attributes, String identityProvider) {
+    public void mapValuesToDetails(Map<String, List<String>> attributes, String identityProvider, String providerUserId) {
         if (identityProvider != null)
             this.details.put("identity_provider", identityProvider);
+        if (providerUserId != null)
+            this.details.put("provider_user_id", providerUserId);
         Map<String, String> userAttributes = Utils.mapListMapToStringMap(attributes);
         this.details.putAll(userAttributes);
     }
 
-    public void handleRegisterEvent(Map<String, List<String>> attributes, String identityProvider) {
-        mapValuesToDetails(attributes, identityProvider);
+    public void handleRegisterEvent(Map<String, List<String>> attributes, String identityProvider, String providerUserId) {
+        mapValuesToDetails(attributes, identityProvider, providerUserId);
     }
 
     public void handleUpdateUserEvent(Map<String, String> details) {
@@ -74,10 +78,10 @@ public class ExtendedEvent {
         }
     }
 
-    public void handleExchangeTokenEvent(Map<String, List<String>> attributes, String userId, String identityProvider) {
+    public void handleExchangeTokenEvent(Map<String, List<String>> attributes, String userId, String identityProvider, String providerUserId) {
         this.type = EventType.LOGIN;
         this.userId = userId;
-        mapValuesToDetails(attributes, identityProvider);
+        mapValuesToDetails(attributes, identityProvider, providerUserId);
     }
 
     public void executeSendingWebhook() {
@@ -171,6 +175,14 @@ public class ExtendedEvent {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public String getProviderUserId() {
+        return providerUserId;
+    }
+
+    public void setProviderUserId(String providerUserId) {
+        this.providerUserId = providerUserId;
     }
 
     public Map<String, String> getDetails() {

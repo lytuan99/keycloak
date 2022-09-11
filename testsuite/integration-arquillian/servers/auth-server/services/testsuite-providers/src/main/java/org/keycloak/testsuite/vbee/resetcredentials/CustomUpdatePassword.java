@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  */
 public class CustomUpdatePassword implements Authenticator, AuthenticatorFactory {
 
-    public static final String PROVIDER_ID = "vbee-reset-password";
+    public static final String PROVIDER_ID = "vbee-update-password";
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
@@ -106,10 +106,16 @@ public class CustomUpdatePassword implements Authenticator, AuthenticatorFactory
         }
 
         try {
+            if (session.userCredentialManager().isValid(realm, user, UserCredentialModel.password(passwordNew))) {
+                Response challenge = context.form()
+                        .setAttribute("username", authSession.getAuthenticatedUser().getUsername())
+                        .addError(new FormMessage(Validation.FIELD_PASSWORD, "newPasswordRepeated"))
+                        .createResponse(UserModel.RequiredAction.UPDATE_PASSWORD);
+                context.challenge(challenge);
+                return;
+            }
             session.userCredentialManager().updateCredential(realm, user, UserCredentialModel.password(passwordNew, false));
-//            String hashedPasswordV3 = user.getFirstAttribute(SyncV3Service.HASHED_PASSWORD_V3);
-//            if (hashedPasswordV3 != null)
-                user.removeAttribute(SyncV3Service.HASHED_PASSWORD_V3);
+            user.removeAttribute(SyncV3Service.HASHED_PASSWORD_V3);
             context.success();
         } catch (ModelException me) {
             errorEvent.detail(Details.REASON, me.getMessage()).error(Errors.PASSWORD_REJECTED);
@@ -151,7 +157,7 @@ public class CustomUpdatePassword implements Authenticator, AuthenticatorFactory
 
     @Override
     public String getDisplayType() {
-        return "Vbee Reset Password";
+        return "Vbee Update Password";
     }
 
     @Override
@@ -163,6 +169,10 @@ public class CustomUpdatePassword implements Authenticator, AuthenticatorFactory
     public boolean isConfigurable() {
         return false;
     }
+
+    public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
+            AuthenticationExecutionModel.Requirement.REQUIRED
+    };
 
     @Override
     public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {

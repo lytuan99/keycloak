@@ -30,3 +30,29 @@ if(toggleNewPassword) {
         this.classList.toggle('fa-eye-slash');
     });
 }
+
+var menuButton = document.getElementById('menu-button');
+var dropdown = document.getElementById('target-international-menu');
+var avatarButton = document.getElementById('avatar-button');
+var avatarDropdown = document.getElementById('target-avatar-menu');
+
+menuButton.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (dropdown.classList.contains('hidden'))
+        dropdown.classList.remove('hidden');
+    else dropdown.classList.add('hidden');
+});
+
+avatarButton.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (avatarDropdown.classList.contains('hidden'))
+        avatarDropdown.classList.remove('hidden');
+    else avatarDropdown.classList.add('hidden');
+});
+
+window.addEventListener('click', function() {
+    if (!avatarDropdown.classList.contains('hidden'))
+        avatarDropdown.classList.add('hidden');
+    if (!dropdown.classList.contains('hidden'))
+        dropdown.classList.add('hidden');
+});

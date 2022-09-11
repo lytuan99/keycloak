@@ -54,6 +54,7 @@ public class FacebookIdentityProvider extends AbstractOAuth2IdentityProvider<Fac
 					? String.join(PROFILE_URL_FIELDS_SEPARATOR, PROFILE_URL, fetchedFields)
 					: PROFILE_URL;
 			JsonNode profile = SimpleHttp.doGet(url, session).header("Authorization", "Bearer " + accessToken).asJson();
+
 			return extractIdentityFromProfile(null, profile);
 		} catch (Exception e) {
 			throw new IdentityBrokerException("Could not obtain user profile from facebook.", e);

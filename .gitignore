@@ -81,3 +81,5 @@ target
 # Quarkus ephemeral data #
 ##########################
 quarkus/data/*.db
+
+node_modules

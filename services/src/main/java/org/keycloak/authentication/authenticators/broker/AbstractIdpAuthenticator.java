@@ -40,7 +40,6 @@ public abstract class AbstractIdpAuthenticator implements Authenticator {
 
     // The clientSession note encapsulating all the BrokeredIdentityContext info. When this note is in clientSession, we know that firstBrokerLogin flow is in progress
     public static final String BROKERED_CONTEXT_NOTE = "BROKERED_CONTEXT";
-
     // The clientSession note with all the info about existing user
     public static final String EXISTING_USER_INFO = "EXISTING_USER_INFO";
 

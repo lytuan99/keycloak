@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class SyncV3Service {
     protected static ServicesLogger log = ServicesLogger.LOGGER;
-    public static final String HASHED_PASSWORD_V3 = "hashed-password-v3";
+    public static final String HASHED_PASSWORD_V3 = "hashedPasswordV3";
     public static final String VBEE_TTS_CLIENT = System.getenv(Env.VBEE_TTS_CLIENT);
 
     private static final String VBEE_SYNC_USER_URL = System.getenv(Env.VBEE_ACCOUNT_URL) + "/api/v1/users/sync";
